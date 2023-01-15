@@ -1,132 +1,235 @@
 #include<iostream>
+
 #include<vector>
+
 #include<fstream>
+
 #include<string>
+
 using namespace std;
-class guest{
-    public:
-    guest(){}
-    ~guest(){}
-    string name;
+void title() {
+    printf("\n\n\n");
+    printf("\t\t\t\t\t");
+    printf("\n");
+    printf("\t\t\t\t    ---------------------------\n");
+    printf("\t\t\t\t    |PARTY MANAGEMENT SYSTEM|\n");
+    printf("\t\t\t\t    ---------------------------\n");
+    printf("\n\n");
+
+}
+class guestvari{
+    public: string name;
     string gender;
-    int age;
-    void setgender(string in)
-    {
-        char a=in[0];
-        if(a=='B'||a=='b'||a=='M'||a=='m')
-        {
-            gender="BOY";
-        }
-        else
-        {
-            gender="GIRL";
-        }
-    }
+    string age;
+    virtual void input()=0;
 };
-typedef vector<guest> my_container;
-void read_file(my_container* my_guests)
+class guest:public guestvari {
+    public:
+    void input();
+    void output();
+    bool check(string a);
+};
+bool guest::check(string a) {
+    if (a == name) {
+        return true;
+    } else {
+       return false;
+    }
+}
+void guest::input() {
+    /*cout << "Enter the name:- ";
+    cin >> name;
+    cout << "Enter the gender:- ";
+    cin >> gender;
+    cout << "Enter the  age:- ";
+    cin >> age;*/
+    cout << "\n\t\t\t-----------------------------";
+    cout << "\n\t\t\tEnter the Name of Guest: ";
+    cin >> name;
+    cout << "\n\t\t\t-----------------------------";
+    cout << "\n\t\t\tEnter the Gender of Guest: ";
+    cin >> gender;
+    cout << "\n\t\t\t-----------------------------";
+    cout << "\n\t\t\tEnter the Age of Guest: ";
+    cin >> age;
+}
+void guest::output() {
+    cout << "\n\t\t\t---------------------";
+    cout << "\n\t\t\tName: " << name;
+    cout << "\n\t\t\t---------------------";
+    cout << "\n\t\t\tGender: " << gender;
+    cout << "\n\t\t\t---------------------";
+    cout << "\n\t\t\tAge: " << age;
+    cout << "\n\t\t\t---------------------";
+}
+class adminvari
 {
-    string in_str;
-    ifstream in_file("MYG.txt");
-    if(in_file.is_open())
-    {
-        guest temp;
-        while (getline(in_file,in_str))
-        {
-            temp.name=in_str;
-            getline(in_file,in_str);
-            temp.setgender(in_str);
-            getline(in_file,in_str);
-            temp.age=stoi(in_str);
-            my_guests->push_back(temp);
+    public: string id;
+    string password;
+    virtual void input()=0;
+};
+class admin:public adminvari {
+    public:
+    void input();
+};
+void admin::input() {
+    /*cout << "Enter the id:- ";
+    cin >> id;
+    cout << "Enter the password:- ";
+    cin >> password;*/
+    cout << "\n\t\t\t-----------------------------";
+    cout << "\n\t\t\tEnter the Admin ID: ";
+    cin >> id;
+    cout << "\n\t\t\t-----------------------------";
+    cout << "\n\t\t\tEnter the Password: ";
+    cin >> password;
+}
+int main() {
+    //"admin.txt" store admin data
+    //"g.txt" stores guests data
+    title();
+    int flag = 0;
+    ifstream ini;
+    ini.open("admin.txt", ios::in);
+    while (1) {
+        string i, pass;
+        cout << "\n\t\t\t-----------------------------";
+        cout << "\n\t\t\tEnter the Admin ID: ";
+        cin >> i;
+        cout << "\n\t\t\t-----------------------------";
+        cout << "\n\t\t\tEnter the Password: ";
+        cin >> pass;
+        admin a;
+        ini >> a.id >> a.password;
+        int count = 0;
+        while (!ini.eof()) {
+            count++;
+            if (a.id == i && a.password == pass) {
+                flag = 1;
+                break;
+            }
+            ini >> a.id >> a.password;
         }
-        in_file.close();
+        ini.close();
+        if (count == 0) {
+            break;
+        } else if (flag) {
+            cout << "\n\t\t\t-----------------------------";
+            cout << "\n\t\t\tAccess Granted." << endl;
+            cout << "\n\t\t\t-----------------------------";
+            break;
+        } else {
+            cout << "\n\t\t\t-----------------------------";
+            cout << "\n\t\t\tWrong Credentials,Try Again." << endl;
+            cout << "\n\t\t\t-----------------------------";
+        }
     }
-}
-void avg_age(my_container* my_guests)
-{
-    auto i=my_guests->begin();
-    int sum=0;
-    int x=0;
-    while(i<my_guests->end())
-    {
-        sum+=i->age;
-        x++;
-        i+=1;
+    while (1) {
+        cout << "\n\t\t\t>>>>>>>>>  EMPLOYEE MANAGEMENT SYSTEM  <<<<<<<<<";
+        cout << "\n";
+        cout << "\n\t\t\t------------------------------------------------";
+        cout << "\n\t\t\tENTER   1:   To Add the Guest.";
+        cout << "\n\t\t\t------------------------------------------------";
+        cout << "\n\t\t\tENTER   2:   To Add Admin.";
+        cout << "\n\t\t\t------------------------------------------------";
+        cout << "\n\t\t\tENTER   3:   To Search the Guest.";
+        cout << "\n\t\t\t------------------------------------------------";
+        cout << "\n\t\t\tENTER   4:   To Delete the Data of the Guest.";
+        cout << "\n\t\t\t------------------------------------------------";
+        cout << "\n\t\t\tENTER   5:   To Display the Data of all Guest.";
+        cout << "\n\t\t\t------------------------------------------------";
+        cout << "\n\t\t\tENTER   6:   To Exit.     ";
+        cout << "\n\t\t\t------------------------------------------------";
+        cout << "\n\n\t\t\t   Please Enter Your Choice: ";
+        int res;
+        cin >> res;
+        if (res == 1) {
+            guest add;
+            add.input();
+            ofstream a;
+            a.open("g.txt", ios::app);
+            a << " " + add.name + " " + add.age + " " + add.gender + " " << endl;
+            a.close();
+        } else if (res == 2) {
+            admin add;
+            add.input();
+            ofstream a;
+            a.open("admin.txt", ios::app);
+            a << " " + add.id + " " + add.password + " " << endl;
+            a.close();
+        } else if (res == 3) {
+            cout << "\n\t\t\t-----------------------------";
+            cout << "\n\t\t\tENTER THE NAME OF GUEST TO BE SEARCHED:- ";
+            string name;
+            cin >> name;
+            ifstream it;
+            it.open("g.txt", ios::in);
+            guest temp;
+            it >> temp.name >> temp.age >> temp.gender;
+            int flag = 1;
+            while (!it.eof()) {
+                if (temp.check(name)) {
+                    flag = 0;
+                    cout << "\n\t\t\tYES THE GUEST IS ATTENDING THE PARTY";
+                    cout << "\n\t\t\t-----------------------------";
+                    cout << "\n\t\t\t DETAILS ";
+                    temp.output();
+                    break;
+                }
+                it >> temp.name >> temp.age >> temp.gender;
+            }
+            it.close();
+            if (flag)
+                cout << "\n\t\t\tNO, THE GUEST IS NOT ATTENDING THE PARTY";
+        } else if (res == 4) {
+            cout << "\n\t\t\t-----------------------------";
+            cout << "\n\t\t\tENTER THE NAME OF GUEST WHOSE DATA IS TO BE DELETED:- ";
+            string name;
+            cin >> name;
+            ifstream iti;
+            guest ii;
+            iti.open("g.txt", ios::in);
+            vector<string> n;
+            vector<string> a;
+            vector<string> g;
+            iti >> ii.name >> ii.age >> ii.gender;
+            while (!iti.eof()) {
+                if (!ii.check(name)) {
+                    n.push_back(ii.name);
+                    a.push_back(ii.age);
+                    g.push_back(ii.gender);
+                }
+                iti >> ii.name >> ii.age >> ii.gender;
+            }
+            iti.close();
+            remove("g.txt");
+            ofstream ito;
+            ito.open("g.txt",ios::out|ios::app);
+            for(int i=0;i<a.size();i++)
+            {
+                ito << " " + n[i] + " " + a[i] + " " + g[i] + " ";
+            }
+            ito.close();
+        } else if (res == 5) {
+            ifstream it;
+            guest temp;
+            it.open("g.txt", ios::in);
+            it >> temp.name >> temp.age >> temp.gender;
+            while (!it.eof()) {
+                temp.output();
+                it >> temp.name >> temp.age >> temp.gender;
+            }
+            it.close();
+        } else if (res == 6) {
+            break;
+        } else {
+            cout << "\n\t\t\t-----------------------------";
+            cout << "\n\t\t\tWRONG RESPONSE, PLEASE TRY AGAIN.";
+            cout << "\n\t\t\t-----------------------------";
+        }
     }
-    cout<<sum/x;
-}
-void print_guest_index(my_container* my_guests,int index)
-{
-    cout<<"Name:- "<<my_guests->at(index).name<<endl;
-    cout<<"Gender:- "<<my_guests->at(index).gender<<endl;
-    cout<<"Age:- "<<my_guests->at(index).age<<endl;
-    cout<<endl;
-}
-void remove_data(my_container* my_guests,int index)
-{
-    my_guests->erase(my_guests->begin()+index);
-}
-void find_guests(my_container* my_guests,string a)
-{
-    auto it=my_guests->begin();
-    while(it->name!=a && it!=my_guests->end())
-    {
-        it+=1;
-    }
-    if(it->name==a)
-    {
-        cout<<"Guest is their in the party";
-    }
-    else
-    {
-        cout<<"Guest is not their in the party";
-    }
-}
-int main()
-{
-    my_container* my_guests=new my_container;
-    read_file(my_guests);
-    int response;
-    string abc;
-    int index;
-    label:
-    cout<<"Following are the options"<<endl;
-    cout<<"1.To get the data of guest at a particular index"<<endl;
-    cout<<"2.To erase data of a guest"<<endl;
-    cout<<"3.To calculate the average of age's of guests"<<endl;
-    cout<<"4.To find whether a person is present in the party or not"<<endl;
-    cout<<"5.To stop the program"<<endl;
-    cout<<"Calculate average age of guest"<<endl;
-    cout<<"Enter the response:- ";
-    cin>>response;
-    switch(response)
-    {
-    case 1:
-        cout<<"Enter the index:- ";
-        cin>>index;
-        print_guest_index(my_guests,index);
-        goto label;
-        break;
-    case 2:
-        cout<<"Enter the index:- ";
-        cin>>index;
-        remove_data(my_guests,index);
-        goto label;
-    case 3:
-        avg_age(my_guests);
-        goto label;
-        break;
-    case 4:
-        cout<<"Enter the name of guest:- ";
-        cin>>abc;
-        find_guests(my_guests,abc);
-        goto label;
-        break;
-    case 5:
-        return 0;
-    default:
-        break;
-    }
+    cout << "\n\t\t\t-----------------------------";
+    cout << "\n\t\t\tTHANK YOU";
+    cout << "\n\t\t\t-----------------------------";
     return 0;
 }
